@@ -9,7 +9,7 @@ COPY . .
 
 # Install Node.js and npm (included in the Node.js package)
 # add a '--no-cache' flag after 'apk' command if you don't want docker
-# to use its cache but rather try reinstalling nodejs and npm everytime
+# to use its cache but rather try reinstalling nodejs and npm everytime.
 RUN apk add nodejs npm
 
 # Install http-server globally using npm
