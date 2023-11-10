@@ -1,0 +1,38 @@
+- name: Build & Deploy Docker container
+  hosts: dockerservers
+  gather_facts: false
+  remote_user: root
+  tasks:
+
+    - name: Stopping the container
+      docker_container:
+        name: sample-container
+        image: sample-site:latest
+        state: stopped
+
+    - name: Removing the container
+      docker_container:
+        name: sample-container
+        image: sample-site:latest
+        state: absent
+
+    - name: Removing Docker Image
+      docker_image:
+        name: sample-site:latest
+        state: absent
+
+    - name: Building Docker Image
+      docker_image:
+        name: sample-site:latest
+        source: build
+        build:
+          path: ~/project
+        state: present
+
+    - name: Creating the container
+      docker_container:
+        name: sample-container
+        image: sample-site:latest
+        ports:
+          - "80:8080"
+        state: started
