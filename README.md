@@ -48,7 +48,7 @@ To get a local copy of this project up and running, follow these simple steps.
 ![Security group screenshot](./screenshot3.png)
 
 3. **SSH into the Jenkins Server:**
-- Change the hostname for easy identification as you will be ssh-ed into both servers simultaneously/
+- Change the hostname for easy identification as you will be SSH-ed into both servers simultaneously
 ```bash
 sudo hostnamectl set-hostname Jenkins
 /bin/bash
@@ -74,11 +74,6 @@ sudo apt-get install jenkins
 - Install Ansible with the below command:
 ```bash
 sudo apt install ansible
-```
-- Open Jenkins on the front-end, copy its public ip and paste in a new tab. Add a column and 8080 at the end. It should look like this: '_http://ip-address:8080_'
-- To get the password, enter the below command in the Jenkins ssh terminal:
-```bash
-sudo cat /var/lib/jenkins/secrets/initialAdminPassword
 ```
 - Copy the password outputted in the terminal and paste to continue with the Jenkins on the frontend. 
 - Select the option to proceed to install suggested plugins.
@@ -121,10 +116,31 @@ ssh root@docker-server-ip
 ```bash
 cd ~
 mkdir playbooks
+cd playbooks
 ```
-- Create a deployment.yaml file with the command 'nano deployment.yaml'. Paste into the file teh contents of the deployment.yaml file found in this repository or the one you forked.
+- Create a deployment.yaml file with the command:
+```bash
+nano deployment.yaml
+```
+- Paste into the file the contents of the deployment.yaml file found in this repository or the one you forked.
+- Open Jenkins on the front-end, copy its public ip and paste in a new tab. Add a column and 8080 at the end. It should look like this: '_http://ip-address:8080_'
+- To get the password, enter the below command in the Jenkins ssh terminal:
+```bash
+sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+```
+- Select the option to install suggested plugins. For the next step, beneath select 'Skip and continue as admin'. Select 'Save and finish' in the section to set the url.
+- When its loaded up, in the Jenkins dashboard, add new item. Name it 'jenkins-ansible-pipeline', then select freestyle project, and create.
+- Scroll down to the section 'Source Code Management', add your forked repository and the name of the branch the code is stored in.
+![GitHub Repo screenshot](./screenshot1.png)
+- Scroll down to the section 'Build Triggers', enable the option 'GitHub hook trigger for GITScm Polling'. 
+In the 'Build Steps' section, select 'Execute Shell' in the dropdown and add the command(replace 'jenkins-server-ip' with the public IP of the Jenkins server):
+```bash
+scp -r /var/lib/jenkins/workspace/jenkins-ansible-pipeline/* root@jenkins-server-ip:~/project/
+ansible-playbook /var/lib/jenkins/playbooks/deployment.yaml
+```
+![Jenkins build triggers/steps](./screenshot2.png)
 
-4. **SSH into the Docker Server**
+4. **SSH into the Docker Server:**
 - Change the hostname
 ```bash
 sudo hostnamectl set-hostname Docker
@@ -166,13 +182,18 @@ ssh-keygen
 cd .ssh/
 nano authorized_keys
 ```
-- Try connecting to the Jenkins server:
-```bash
 
-```
+5. **Creating GitHub Webhook:**
+- Login to your GitHub account, move to the repository you forked, and enter settings. On the left panel bar, enter 'WebHooks' section and then 'Add Webhook' button. It will ask for authentication and after doing that, enter the payload URL(jenkins-plublic-ip -- Public IP of the Jenkins server): 'http://jenkins-public-ip:8080/github-webhook/'
+- Select the option 'Send me everthing'. Leave it on 'Active'. The click the button 'Update webhook'
+![GitHub Webhook Screenshot](./screenshot4.png)
 
 ## Usage
 
+- Make changes to anything in the website files(change a sentence in the index.html). Commit the changes to your GitHub repository.
+- Go to the Jenkins dashboard, click on the 'jenkins-ansible-pipeline' item, and watch the build process being initiated(bottom left of the dashboard). 
+- Once the build is completed it will show a green tick, click on it. Scroll to the buttom, there you have the public IP address of the Docker server. Copy, and open it in a new tab.
+![Jenkins Build Successful](./screenshot5.png)
 
 
 ## Contributing
@@ -193,13 +214,3 @@ Distributed under the GNU License. See LICENSE for more information.
 
 This project was created to demonstrate the integration of Flask with frontend technologies.
 Special thanks to the Flask, HTML, CSS, and JavaScript communities for their valuable resources and documentation.
-
-
-Jenkins - Password
-
-sudo cat /var/lib/jenkins/secrets/initialAdminPassword
-
-Jenkins - Build Steps
-
-scp -r /var/lib/jenkins/workspace/jenkins-ansible-pipeline/* root@34.230.80.196:~/project/
-ansible-playbook /var/lib/jenkins/playbooks/deployment.yaml
