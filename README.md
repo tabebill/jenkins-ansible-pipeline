@@ -57,11 +57,11 @@ sudo hostnamectl set-hostname Jenkins
 ```bash
 sudo apt update
 ```
-- Install Jenkins Runtime Environemnt in the server. Enter 'y' when prompted
+- Install Jenkins Runtime Environemnt in the server. Enter `y` when prompted
 ```bash
 sudo apt install openjdk-17-jre
 ```
-- Install Jenkins. Enter 'y' when prompted
+- Install Jenkins. Enter `y` when prompted
 ```bash
 sudo wget -O /usr/share/keyrings/jenkins-keyring.asc \
   https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
@@ -77,7 +77,7 @@ sudo apt install ansible
 ```
 - Copy the password outputted in the terminal and paste to continue with the Jenkins on the frontend. 
 - Select the option to proceed to install suggested plugins.
-- Install Docker(Enter 'y' when prompted):
+- Install Docker(Enter `y` when prompted):
 ```bash
 sudo apt install python3-pip
 ```
@@ -108,11 +108,11 @@ cd .ssh/
 cat id_rsa.pub
 ```
 - Copy the outputted content from 'ssh-rsa' to 'jenkins@jenkins'. (Refer to the 6th step in the section: "SSH into the Docker Server").
-- Try connecting to the Docker server(replace 'docker-server-ip' with the public ip of the docker server):
+- Try connecting to the Docker server(replace `docker-server-ip` with the public ip of the docker server):
 ```bash
 ssh root@docker-server-ip
 ```
-- Connecting to the Docker server should be successful. Exit the the Docker server with the 'exit' command. Go to the home directory, create a 'playbooks' directory and move into it:
+- Connecting to the Docker server should be successful. Exit the the Docker server with the `exit` command. Go to the home directory, create a 'playbooks' directory and move into it:
 ```bash
 cd ~
 mkdir playbooks
@@ -128,12 +128,12 @@ nano deployment.yaml
 ```bash
 sudo cat /var/lib/jenkins/secrets/initialAdminPassword
 ```
-- Select the option to install suggested plugins. For the next step, beneath select 'Skip and continue as admin'. Select 'Save and finish' in the section to set the url.
-- When its loaded up, in the Jenkins dashboard, add new item. Name it 'jenkins-ansible-pipeline', then select freestyle project, and create.
-- Scroll down to the section 'Source Code Management', add your forked repository and the name of the branch the code is stored in.
+- Select the option to install suggested plugins. For the next step, beneath select `Skip and continue as admin`. Select `Save and finish` in the section to set the url.
+- When its loaded up, in the Jenkins dashboard, add new item. Name it `jenkins-ansible-pipeline`, then select freestyle project, and create.
+- Scroll down to the section `Source Code Management`, add your forked repository and the name of the branch the code is stored in.
 ![GitHub Repo screenshot](./screenshot1.png)
-- Scroll down to the section 'Build Triggers', enable the option 'GitHub hook trigger for GITScm Polling'. 
-In the 'Build Steps' section, select 'Execute Shell' in the dropdown and add the command(replace 'jenkins-server-ip' with the public IP of the Jenkins server):
+- Scroll down to the section `Build Triggers`, enable the option `GitHub hook trigger for GITScm Polling`. 
+In the `Build Steps` section, select 'Execute Shell' in the dropdown and add the command(replace `jenkins-server-ip` with the public IP of the Jenkins server):
 ```bash
 scp -r /var/lib/jenkins/workspace/jenkins-ansible-pipeline/* root@jenkins-server-ip:~/project/
 ansible-playbook /var/lib/jenkins/playbooks/deployment.yaml
@@ -177,22 +177,22 @@ sudo su
 ```bash
 ssh-keygen
 ```
-- Move to the .ssh directory to paste the copied public key of the Jenkins server in the 'authorized keys' file(Comment out all text in the file).
+- Move to the .ssh directory to paste the copied public key of the Jenkins server in the `authorized_keys` file. Refer to the 13th step in the section: "SSH into the Jenkins Server" (Comment out all the present text in the file).
 ```bash
 cd .ssh/
 nano authorized_keys
 ```
 
 5. **Creating GitHub Webhook:**
-- Login to your GitHub account, move to the repository you forked, and enter settings. On the left panel bar, enter 'WebHooks' section and then 'Add Webhook' button. It will ask for authentication and after doing that, enter the payload URL(jenkins-plublic-ip -- Public IP of the Jenkins server): 'http://jenkins-public-ip:8080/github-webhook/'
-- Select the option 'Send me everthing'. Leave it on 'Active'. The click the button 'Update webhook'
+- Login to your GitHub account, move to the repository you forked, and enter settings. On the left panel bar, enter `WebHooks` section and then `Add Webhook` button. It will ask for authentication and after doing that, enter the payload URL(jenkins-plublic-ip -- Public IP of the Jenkins server): `http://jenkins-public-ip:8080/github-webhook/`
+- Select the option `Send me everthing`. Leave it on `Active`. The click the button `Update webhook`
 ![GitHub Webhook Screenshot](./screenshot4.png)
 
 ## Usage
 
 - Make changes to anything in the website files(change a sentence in the index.html). Commit the changes to your GitHub repository.
-- Go to the Jenkins dashboard, click on the 'jenkins-ansible-pipeline' item, and watch the build process being initiated(bottom left of the dashboard). 
-- Once the build is completed it will show a green tick, click on it. Scroll to the buttom, there you have the public IP address of the Docker server. Copy, and open it in a new tab.
+- Go to the Jenkins dashboard, click on the `jenkins-ansible-pipeline` item, and watch the build process being initiated(bottom left of the dashboard). 
+- Once the build is completed it will show a green tick, click on it. Then scroll to the buttom, there you have the public IP address of the Docker server. Copy, and open it in a new tab.
 ![Jenkins Build Successful](./screenshot5.png)
 
 
