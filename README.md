@@ -12,7 +12,6 @@
 - [Usage](#usage)
 - [Contributing](#contributing)
 - [License](#license)
-- [Acknowledgements](#acknowledgements)
 
 ## About the Project
 
@@ -89,7 +88,7 @@ pip install docker
 cd /etc/ansible
 sudo nano hosts
 ```
-- In the opened file, add(enter IP address):
+- In the opened file, add(IP-address - enter the IP address of the Docker server):
 ```
 [dockerservers]
 IP-address
@@ -209,8 +208,3 @@ Open a Pull Request
 ## License
 
 Distributed under the GNU License. See LICENSE for more information.
-
-## Acknowledgements
-
-This project was created to demonstrate the integration of Flask with frontend technologies.
-Special thanks to the Flask, HTML, CSS, and JavaScript communities for their valuable resources and documentation.
