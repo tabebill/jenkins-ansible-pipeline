@@ -88,10 +88,10 @@ pip install docker
 cd /etc/ansible
 sudo nano hosts
 ```
-- In the opened file, add(IP-address - enter the IP address of the Docker server):
+- In the opened file, add(docker-server-ip - enter the IP address of the Docker server):
 ```
 [dockerservers]
-IP-address
+docker-server-ip
 ```
 - Switch to the root user and then to the Jenkins user to create a key to authenticate with the Docker server (Press enter trice inorder to save the key in root and not to create any passphrase - demo purposes):
 ```bash
